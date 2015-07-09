@@ -1,5 +1,7 @@
 
 
+![image](https://github.com/chenqihui/QHDanumuDemo/blob/master/screenshots/QHDanmuShow.gif)
+
 一、固定的数值：
 
 1、字体大小                     大中小分别为19、17、15
