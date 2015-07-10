@@ -26,13 +26,13 @@ self.danmuSendV.deleagte = self;
 
 pod "QHDanumuDemo", '~> 1.3'
 
-#效果图
+#效果图：
 
 ![image](https://github.com/chenqihui/QHDanumuDemo/blob/master/screenshots/QHDanmuShow.gif)
 
-#描述
+#描述：
 
-一、固定的数值：
+一、固定的数值（可自行修改）：
 
 1、字体大小                     大中小分别为19、17、15
 
