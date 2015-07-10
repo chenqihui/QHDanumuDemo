@@ -1,6 +1,34 @@
+#说明：
 
+QHDanmu文件夹下是主要的弹幕模块系统
+
+QHDanmuSend文件夹下是简单的发射弹幕的界面
+
+使用可以参考ViewController
+
+创建弹幕
+
+self.danmuManager = [[QHDanmuManager alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, _screenV.bounds.size.height) data:infos inView:_screenV durationTime:1];
+
+[self.danmuManager initStart];
+
+发射弹幕
+
+self.danmuSendV = [[QHDanmuSendView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
+
+[self.view addSubview:self.danmuSendV];
+
+self.danmuSendV.deleagte = self;
+ 
+[self.danmuSendV showAction:self.view];
+
+#安装（通过CocoaPods）：
+
+pod "QHDanumuDemo", '~> 1.3'
 
 ![image](https://github.com/chenqihui/QHDanumuDemo/blob/master/screenshots/QHDanmuShow.gif)
+
+#描述
 
 一、固定的数值：
 
