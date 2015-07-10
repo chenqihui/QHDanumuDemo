@@ -22,6 +22,7 @@
 		744871AF1B3F896100DB22B7 /* QHDanmuManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 744871AE1B3F896100DB22B7 /* QHDanmuManager.m */; };
 		744871B21B3F898700DB22B7 /* QHDanmuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 744871B11B3F898700DB22B7 /* QHDanmuView.m */; };
 		7463F96A1B45430A000E2150 /* QHDanmuLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7463F9691B45430A000E2150 /* QHDanmuLabel.m */; };
+		747652651B4F5CA700D8DD9D /* NSTimer+EOCBlocksSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 747652641B4F5CA700D8DD9D /* NSTimer+EOCBlocksSupport.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +63,8 @@
 		744871B11B3F898700DB22B7 /* QHDanmuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QHDanmuView.m; sourceTree = "<group>"; };
 		7463F9681B45430A000E2150 /* QHDanmuLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QHDanmuLabel.h; sourceTree = "<group>"; };
 		7463F9691B45430A000E2150 /* QHDanmuLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QHDanmuLabel.m; sourceTree = "<group>"; };
+		747652631B4F5CA700D8DD9D /* NSTimer+EOCBlocksSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTimer+EOCBlocksSupport.h"; sourceTree = "<group>"; };
+		747652641B4F5CA700D8DD9D /* NSTimer+EOCBlocksSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTimer+EOCBlocksSupport.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +120,7 @@
 				7436511D1B4E70500055E399 /* README.md */,
 				743651141B4E45CA0055E399 /* QHDanmuSend */,
 				744871A51B3F7E2600DB22B7 /* QHDanmu */,
+				747652621B4F5C4A00D8DD9D /* Category */,
 				744871831B3F7E0700DB22B7 /* AppDelegate.h */,
 				744871841B3F7E0700DB22B7 /* AppDelegate.m */,
 				744871861B3F7E0700DB22B7 /* ViewController.h */,
@@ -169,6 +173,15 @@
 				744871AB1B3F84C600DB22B7 /* QHDanmuUtil.m */,
 			);
 			path = QHDanmu;
+			sourceTree = "<group>";
+		};
+		747652621B4F5C4A00D8DD9D /* Category */ = {
+			isa = PBXGroup;
+			children = (
+				747652631B4F5CA700D8DD9D /* NSTimer+EOCBlocksSupport.h */,
+				747652641B4F5CA700D8DD9D /* NSTimer+EOCBlocksSupport.m */,
+			);
+			name = Category;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -278,6 +291,7 @@
 				7436511A1B4E45CA0055E399 /* QHDanmuSendView.m in Sources */,
 				744871821B3F7E0700DB22B7 /* main.m in Sources */,
 				7463F96A1B45430A000E2150 /* QHDanmuLabel.m in Sources */,
+				747652651B4F5CA700D8DD9D /* NSTimer+EOCBlocksSupport.m in Sources */,
 				744871B21B3F898700DB22B7 /* QHDanmuView.m in Sources */,
 				743651191B4E45CA0055E399 /* QHDanmuOperateView.m in Sources */,
 				7436511E1B4E70500055E399 /* README.md in Sources */,

@@ -11,6 +11,8 @@
 #import "QHDanmuManager.h"
 #import "QHDanmuSendView.h"
 
+#import "NSTimer+EOCBlocksSupport.h"
+
 @interface ViewController () <QHDanmuSendViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIView *screenV;
@@ -30,6 +32,7 @@
 - (void)dealloc {
     self.danmuManager = nil;
     self.danmuSendV = nil;
+    [self p_destoryTimer];
 }
 
 - (void)viewDidLoad {
@@ -144,7 +147,12 @@
         return;
     }
     if (_timer == nil) {
-        _timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(progressVideo) userInfo:nil repeats:YES];
+//        _timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(progressVideo) userInfo:nil repeats:YES];
+        __weak typeof(self) weakSelf = self;
+        self.timer = [NSTimer eoc_scheduledTimerWithTimeInterval:1 block:^{
+            ViewController *strogSelf = weakSelf;
+            [strogSelf progressVideo];
+        } repeats:YES];
     }
 }
 
