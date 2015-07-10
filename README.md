@@ -26,6 +26,8 @@ self.danmuSendV.deleagte = self;
 
 pod "QHDanumuDemo", '~> 1.3'
 
+#效果图
+
 ![image](https://github.com/chenqihui/QHDanumuDemo/blob/master/screenshots/QHDanmuShow.gif)
 
 #描述
