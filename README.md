@@ -25,6 +25,7 @@ self.danmuSendV.deleagte = self;
 #安装（通过CocoaPods）：
 
 pod "QHDanumuDemo", '~> 1.4'
+
 pod "QHDanumuDemo", '~> 1.3'
 
 #效果图：
