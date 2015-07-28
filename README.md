@@ -14,7 +14,7 @@ self.danmuManager = [[QHDanmuManager alloc] initWithFrame:CGRectMake(0, 0, [UISc
 
 发射弹幕
 
-self.danmuSendV = [[QHDanmuSendView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
+self.danmuSendV = [[QHDanmuSendView alloc] initWithFrame:self.view.bounds];
 
 [self.view addSubview:self.danmuSendV];
 
