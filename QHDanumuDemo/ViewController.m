@@ -126,13 +126,18 @@
 
 #pragma mark - QHDanmuSendViewDelegate
 
-- (void)sendDanmu:(NSString *)info {
+- (void)sendDanmu:(QHDanmuSendView *)danmuSendV info:(NSString *)info {
     NSDate *now = [NSDate new];
     double t = ((double)now.timeIntervalSince1970);
     t = ((int)t)%1000;
     CGFloat nowTime = self.countTime + t*0.0001;
     [self.danmuManager insertDanmu:@{kDanmuContentKey:info, kDanmuTimeKey:@(nowTime), kDanmuOptionalKey:@"df"}];
     
+    if (self.bPlaying)
+        [self resume:nil];
+}
+
+- (void)closeSendDanmu:(QHDanmuSendView *)danmuSendV {
     if (self.bPlaying)
         [self resume:nil];
 }
@@ -147,7 +152,6 @@
         return;
     }
     if (_timer == nil) {
-//        _timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(progressVideo) userInfo:nil repeats:YES];
         __weak typeof(self) weakSelf = self;
         self.timer = [NSTimer eoc_scheduledTimerWithTimeInterval:1 block:^{
             ViewController *strogSelf = weakSelf;
@@ -184,7 +188,7 @@
     if (self.danmuSendV != nil) {
         self.danmuSendV = nil;
     }
-    self.danmuSendV = [[QHDanmuSendView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height)];
+    self.danmuSendV = [[QHDanmuSendView alloc] initWithFrame:self.view.bounds];
     [self.view addSubview:self.danmuSendV];
     self.danmuSendV.deleagte = self;
     [self.danmuSendV showAction:self.view];
@@ -199,7 +203,9 @@
 }
 
 - (IBAction)clickScreenView:(id)sender {
+#ifdef DEBUG
     NSLog(@"hello world");
+#endif
 }
 
 #pragma mark - Get

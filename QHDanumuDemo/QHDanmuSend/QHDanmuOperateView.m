@@ -37,7 +37,7 @@
 #pragma mark - Private
 
 - (void)setup {
-    self.backgroundColor = [UIColor lightGrayColor];
+    self.backgroundColor = [UIColor colorWithRed:251/255.f green:251/255.f blue:251/255.f alpha:1];
     self.userInteractionEnabled = YES;
     [self p_setupData];
     [self p_addView];
@@ -64,13 +64,16 @@
     [self.sendBtn addTarget:self action:@selector(closeDanmuAction:) forControlEvents:UIControlEventTouchUpInside];
     
     self.editContentTF = [[UITextField alloc] initWithFrame:CGRectMake(_spaceX, _spaceY, CGRectGetMinX(self.sendBtn.frame) - 2*_spaceX, btnH)];
-    self.editContentTF.layer.cornerRadius = 3;
+    self.editContentTF.layer.cornerRadius = 5;
     self.editContentTF.backgroundColor = [UIColor whiteColor];
     self.editContentTF.font = font;
     self.editContentTF.returnKeyType = UIReturnKeySend;
     self.editContentTF.layer.borderWidth = 1;
-    self.editContentTF.layer.borderColor = [UIColor orangeColor].CGColor;
+    self.editContentTF.layer.borderColor = [UIColor colorWithRed:167/255.f green:162/255.f blue:159/255.f alpha:1].CGColor;
     self.editContentTF.placeholder = @"请输入弹幕内容";
+    self.editContentTF.leftView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
+    self.editContentTF.leftViewMode = UITextFieldViewModeAlways;
+    self.editContentTF.clearButtonMode = UITextFieldViewModeWhileEditing;
     [self addSubview:self.editContentTF];
 }
 

@@ -37,11 +37,6 @@
         
         [self addSubview:self.blackOverlay];
         
-        UIButton *btn = [UIButton buttonWithType:UIButtonTypeContactAdd];
-        btn.center = self.center;
-        [self addSubview:btn];
-        [btn addTarget:self action:@selector(backAction) forControlEvents:UIControlEventTouchUpInside];
-        
         self.danmuOperateV = [[QHDanmuOperateView alloc] initWithFrame:CGRectMake(0, self.frame.size.height - VIEW_OPERATE_HEIGHT, self.frame.size.width, VIEW_OPERATE_HEIGHT)];
         self.danmuOperateV.deleagte = self;
         self.danmuOperateV.editContentTF.delegate = self;
@@ -49,7 +44,7 @@
         
         [self addKeyboardNotificationCenter];
         
-        [self.danmuOperateV.editContentTF becomeFirstResponder];
+        self.alpha = 0;
     }
     return self;
 }
@@ -67,8 +62,8 @@
 #pragma mark - UITextFieldDelegate
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    if ([self.deleagte respondsToSelector:@selector(sendDanmu:)]) {
-        [self.deleagte sendDanmu:textField.text];
+    if ([self.deleagte respondsToSelector:@selector(sendDanmu:info:)]) {
+        [self.deleagte sendDanmu:self info:textField.text];
     }
     [self backAction];
     return NO;
@@ -83,23 +78,29 @@
 #pragma mark - Action
 
 - (void)showAction:(UIView *)superView {
+    self.alpha = 1;
     CGRect frame = self.frame;
     frame.origin.y = superView.frame.size.height;
     self.frame = frame;
-    [UIView animateWithDuration:1 animations:^{
+    [UIView animateWithDuration:0.6 animations:^{
         CGRect frame = self.frame;
         frame.origin.y = superView.frame.size.height - self.frame.size.height;
         self.frame = frame;
+    } completion:^(BOOL finished) {
+        [self.danmuOperateV.editContentTF becomeFirstResponder];
     }];
 }
 
 - (void)backAction {
     [self.danmuOperateV.editContentTF resignFirstResponder];
-    [UIView animateWithDuration:1 animations:^{
+    [UIView animateWithDuration:0.6 animations:^{
         CGRect frame = self.frame;
         frame.origin.y = self.superview.frame.size.height;
         self.frame = frame;
     } completion:^(BOOL finished) {
+        if ([self.deleagte respondsToSelector:@selector(closeSendDanmu:)]) {
+            [self.deleagte closeSendDanmu:self];
+        }
         [self removeFromSuperview];
     }];
 }

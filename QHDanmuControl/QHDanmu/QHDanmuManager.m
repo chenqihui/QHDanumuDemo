@@ -26,7 +26,7 @@ typedef struct DanmuPositionStruct DanmuPositionStruct;
 @property (nonatomic, readwrite) DanmuManagerState danmuManagerState;
 
 @property (nonatomic) CGRect frame;
-@property (nonatomic, strong) NSArray *infos;
+@property (nonatomic, strong) NSMutableArray *infos;
 @property (nonatomic, weak) UIView *superView;
 @property (nonatomic) NSUInteger durationTime;//添加弹幕的间隔时间
 @property (nonatomic) NSUInteger currentIndex;
@@ -47,6 +47,8 @@ typedef struct DanmuPositionStruct DanmuPositionStruct;
 @property (nonatomic) DanmuPositionStruct middleFadeTwoPosition;
 @property (nonatomic) DanmuPositionStruct downFadeTwoPosition;
 
+@property (nonatomic) dispatch_queue_t danmuQueue;
+
 @end
 
 @implementation QHDanmuManager
@@ -62,9 +64,11 @@ typedef struct DanmuPositionStruct DanmuPositionStruct;
     self = [super init];
     if (self) {
         self.frame = frame;
-        self.infos = infos;
+        self.infos = [infos mutableCopy];
         self.superView = view;
         self.durationTime = time;
+        
+        self.danmuQueue = dispatch_queue_create("com.danmu.queue", NULL);
         
         [self p_initInfo];
     }
@@ -341,6 +345,7 @@ typedef struct DanmuPositionStruct DanmuPositionStruct;
 - (void)initStart {
     if (_danmuManagerState == DanmuManagerStateWait ||
         _danmuManagerState == DanmuManagerStateStop) {
+        
         [self p_initData];
     }
 }
@@ -348,66 +353,81 @@ typedef struct DanmuPositionStruct DanmuPositionStruct;
 - (void)rollDanmu:(NSTimeInterval)startTime {
     if (_danmuManagerState == DanmuManagerStateStop)
         return;
-    if (_danmuManagerState != DanmuManagerStateAnimationing)
-        _danmuManagerState = DanmuManagerStateAnimationing;
-    
-    if ((NSInteger)startTime % _durationTime == 0) {
-        [self p_danmu:startTime];
-    }
+    dispatch_sync(self.danmuQueue, ^{
+        if (_danmuManagerState != DanmuManagerStateAnimationing)
+            _danmuManagerState = DanmuManagerStateAnimationing;
+        
+        if ((NSInteger)startTime % _durationTime == 0) {
+            [self p_danmu:startTime];
+        }
+    });
 }
 
 - (void)stop {
-    _danmuManagerState = DanmuManagerStateStop;
-    [self.arRollChannelInfo removeAllObjects];
-    [self.danmuView.subviews makeObjectsPerformSelector:@selector(removeDanmu)];
-    [self.danmuView removeFromSuperview];
+    dispatch_sync(self.danmuQueue, ^{
+        _danmuManagerState = DanmuManagerStateStop;
+        [self.arRollChannelInfo removeAllObjects];
+        [self.arFadeChannelInfo removeAllObjects];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.danmuView.subviews makeObjectsPerformSelector:@selector(removeDanmu)];
+            [self.danmuView removeFromSuperview];
+        });
+    });
 }
 
 - (void)pause {
     if (_danmuManagerState != DanmuManagerStateAnimationing)
         return;
-    _danmuManagerState = DanmuManagerStatePause;
-    [self.danmuView.subviews makeObjectsPerformSelector:@selector(pause)];
+    dispatch_sync(self.danmuQueue, ^{
+        _danmuManagerState = DanmuManagerStatePause;
+        [self.danmuView.subviews makeObjectsPerformSelector:@selector(pause)];
+    });
 }
 
 - (void)resume:(NSTimeInterval)nowTime {
     if (_danmuManagerState != DanmuManagerStatePause)
         return;
-    _danmuManagerState = DanmuManagerStateAnimationing;
-    for (id subview in self.danmuView.subviews) {
-        if ([subview isKindOfClass:[QHDanmuLabel class]]) {
-            [(QHDanmuLabel *)subview resume:nowTime];
+    dispatch_sync(self.danmuQueue, ^{
+        _danmuManagerState = DanmuManagerStateAnimationing;
+        for (id subview in self.danmuView.subviews) {
+            if ([subview isKindOfClass:[QHDanmuLabel class]]) {
+                [(QHDanmuLabel *)subview resume:nowTime];
+            }
         }
-    }
+    });
 }
 
 - (void)restart {
     [self p_initData];
-    _danmuManagerState = DanmuManagerStateAnimationing;
+    dispatch_sync(self.danmuQueue, ^{
+        _danmuManagerState = DanmuManagerStateAnimationing;
+    });
 }
 
 - (void)insertDanmu:(NSDictionary *)info {
-    __block QHDanmuLabel *danmuLabel = [QHDanmuLabel createWithInfo:info inView:self.danmuView];
-    if ([danmuLabel isMoveModeFadeOut]) {
-        [self p_getFadeBestChannel:danmuLabel completion:^(NSUInteger idx, CGFloat offsetY) {
-            if (idx != NSNotFound) {
-                [danmuLabel setDanmuChannel:idx offset:offsetY];
-            }
-        }];
-    }
-    else {
-        [self p_getRollBestChannel:danmuLabel completion:^(NSUInteger idx, CGFloat offsetX) {
-            if (idx != NSNotFound) {
-                [danmuLabel setDanmuChannel:idx offset:offsetX];
-            }
-        }];
-    }
+    dispatch_sync(self.danmuQueue, ^{
+        __block QHDanmuLabel *danmuLabel = [QHDanmuLabel createWithInfo:info inView:self.danmuView];
+        if ([danmuLabel isMoveModeFadeOut]) {
+            [self p_getFadeBestChannel:danmuLabel completion:^(NSUInteger idx, CGFloat offsetY) {
+                if (idx != NSNotFound) {
+                    [danmuLabel setDanmuChannel:idx offset:offsetY];
+                }
+            }];
+        }
+        else {
+            [self p_getRollBestChannel:danmuLabel completion:^(NSUInteger idx, CGFloat offsetX) {
+                if (idx != NSNotFound) {
+                    [danmuLabel setDanmuChannel:idx offset:offsetX];
+                }
+            }];
+        }
+    });
 }
 
 - (void)resetDanmuWithFrame:(CGRect)frame data:(NSArray *)infos inView:(UIView *)view durationTime:(NSUInteger)time {
     self.frame = frame;
     if (infos != nil)
-        self.infos = infos;
+        self.infos = [infos mutableCopy];
     self.superView = view;
     self.durationTime = time;
         
@@ -417,6 +437,12 @@ typedef struct DanmuPositionStruct DanmuPositionStruct;
 - (void)resetDanmuWithFrame:(CGRect)frame {
     self.frame = frame;
     [self p_initInfo];
+}
+
+- (void)resetDanmuInfos:(NSArray *)infos {
+    NSAssert(infos != nil, @"传入的弹幕信息不能为nil");
+    self.infos = nil;
+    self.infos = [infos mutableCopy];
 }
 
 @end

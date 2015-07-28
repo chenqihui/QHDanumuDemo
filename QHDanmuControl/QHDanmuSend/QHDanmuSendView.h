@@ -8,9 +8,15 @@
 
 #import <UIKit/UIKit.h>
 
+@class QHDanmuSendView;
+
 @protocol QHDanmuSendViewDelegate <NSObject>
 
-- (void)sendDanmu:(NSString *)info;
+@optional
+
+- (void)sendDanmu:(QHDanmuSendView *)danmuSendV info:(NSString *)info;
+
+- (void)closeSendDanmu:(QHDanmuSendView *)danmuSendV;
 
 @end
 

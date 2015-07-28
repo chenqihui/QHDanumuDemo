@@ -102,33 +102,23 @@ static NSString * const DANMU_POSITION_BOTTOM = @"b";
 }
 
 - (void)p_rollAnimation:(CGFloat)time delay:(NSTimeInterval)waitTime {
-    self.danmuState = DanmuStateAnimationing;
-    [UIView animateWithDuration:time delay:waitTime options:UIViewAnimationOptionCurveLinear animations:^{
-        CGRect frame = self.frame;
-        frame.origin.x = -self.frame.size.width;
-        self.frame = frame;
-    } completion:^(BOOL finished) {
-        if (finished)
-            [self removeDanmu];
-    }];
-}
-
-- (void)p_fadeAnimation:(CGFloat)time delay:(NSTimeInterval)disappearTime waitTime:(NSTimeInterval)waitTime {
-    if (waitTime == 0) {
-        self.alpha = 1;
+    dispatch_async(dispatch_get_main_queue(), ^{
         self.danmuState = DanmuStateAnimationing;
-        [UIView animateWithDuration:time delay:disappearTime options:UIViewAnimationOptionCurveLinear animations:^{
-            self.alpha = 0.2;
+        [UIView animateWithDuration:time delay:waitTime options:UIViewAnimationOptionCurveLinear animations:^{
+            CGRect frame = self.frame;
+            frame.origin.x = -self.frame.size.width;
+            self.frame = frame;
         } completion:^(BOOL finished) {
             if (finished)
                 [self removeDanmu];
         }];
-    }
-    else {
-        self.alpha = 0;
-        [UIView animateWithDuration:0 delay:waitTime options:UIViewAnimationOptionCurveLinear animations:^{
+    });
+}
+
+- (void)p_fadeAnimation:(CGFloat)time delay:(NSTimeInterval)disappearTime waitTime:(NSTimeInterval)waitTime {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (waitTime == 0) {
             self.alpha = 1;
-        } completion:^(BOOL finished) {
             self.danmuState = DanmuStateAnimationing;
             [UIView animateWithDuration:time delay:disappearTime options:UIViewAnimationOptionCurveLinear animations:^{
                 self.alpha = 0.2;
@@ -136,8 +126,22 @@ static NSString * const DANMU_POSITION_BOTTOM = @"b";
                 if (finished)
                     [self removeDanmu];
             }];
-        }];
-    }
+        }
+        else {
+            self.alpha = 0;
+            [UIView animateWithDuration:0 delay:waitTime options:UIViewAnimationOptionCurveLinear animations:^{
+                self.alpha = 1;
+            } completion:^(BOOL finished) {
+                self.danmuState = DanmuStateAnimationing;
+                [UIView animateWithDuration:time delay:disappearTime options:UIViewAnimationOptionCurveLinear animations:^{
+                    self.alpha = 0.2;
+                } completion:^(BOOL finished) {
+                    if (finished)
+                        [self removeDanmu];
+                }];
+            }];
+        }
+    });
 }
 
 #pragma mark - Action
@@ -186,23 +190,25 @@ static NSString * const DANMU_POSITION_BOTTOM = @"b";
 }
 
 - (void)pause {
-    if (self.isMoveModeFadeOut) {
-        //    self.danmuState = DanmuStateStop;
-        //    self.alpha = 1.0;
-        //    [self.layer removeAllAnimations];
-    }
-    else {
-        self.danmuState = DanmuStateStop;
-        UIView *view = self;
-        CALayer *layer = view.layer;
-        CGRect rect = view.frame;
-        if (layer.presentationLayer) {
-            rect = ((CALayer *)layer.presentationLayer).frame;
-//            rect.origin.x -= 1;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (self.isMoveModeFadeOut) {
+            //    self.danmuState = DanmuStateStop;
+            //    self.alpha = 1.0;
+            //    [self.layer removeAllAnimations];
         }
-        view.frame = rect;
-        [view.layer removeAllAnimations];
-    }
+        else {
+            self.danmuState = DanmuStateStop;
+            UIView *view = self;
+            CALayer *layer = view.layer;
+            CGRect rect = view.frame;
+            if (layer.presentationLayer) {
+                rect = ((CALayer *)layer.presentationLayer).frame;
+    //            rect.origin.x -= 1;
+            }
+            view.frame = rect;
+            [view.layer removeAllAnimations];
+        }
+    });
 }
 
 - (void)resume:(NSTimeInterval)nowTime {
@@ -238,16 +244,18 @@ static NSString * const DANMU_POSITION_BOTTOM = @"b";
 }
 
 - (void)removeDanmu {
-    if (self.isMoveModeFadeOut) {
-        self.danmuState = DanmuStateFinish;
-        [self.layer removeAllAnimations];
-        [self removeFromSuperview];
-    }
-    else {
-        self.danmuState = DanmuStateFinish;
-        [self.layer removeAllAnimations];
-        [self removeFromSuperview];
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (self.isMoveModeFadeOut) {
+            self.danmuState = DanmuStateFinish;
+            [self.layer removeAllAnimations];
+            [self removeFromSuperview];
+        }
+        else {
+            self.danmuState = DanmuStateFinish;
+            [self.layer removeAllAnimations];
+            [self removeFromSuperview];
+        }
+    });
 }
 
 #pragma mark - Get

@@ -101,5 +101,11 @@ typedef NS_ENUM(NSUInteger, DanmuManagerState) {
  *  @param frame 弹幕显示的frame
  */
 - (void)resetDanmuWithFrame:(CGRect)frame;
+/**
+ *  重置弹幕信息
+ *  调用时需要先，如果视频在播放时，需要先暂停，然后再播放
+ *  @param infos 弹幕信息
+ */
+- (void)resetDanmuInfos:(NSArray *)infos;
 
 @end
