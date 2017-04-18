@@ -1,4 +1,4 @@
-#说明：
+# 说明：
 
 QHDanmu文件夹下是主要的弹幕模块系统
 
@@ -22,17 +22,17 @@ self.danmuSendV.deleagte = self;
  
 [self.danmuSendV showAction:self.view];
 
-#安装（通过CocoaPods）：
+# 安装（通过CocoaPods）：
 
 pod "QHDanumuDemo", '~> 1.4'
 
 pod "QHDanumuDemo", '~> 1.3'
 
-#效果图：
+# 效果图：
 
 ![image](https://github.com/chenqihui/QHDanumuDemo/blob/master/screenshots/QHDanmuShow.gif)
 
-#描述：
+# 描述：
 
 一、固定的数值（可自行修改）：
 
