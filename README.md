@@ -1,3 +1,6 @@
+
+**建议参考新的弹幕系统：[chenqihui/QHDanmu2Demo](https://github.com/chenqihui/QHDanmu2Demo)**
+
 # 说明：
 
 QHDanmu文件夹下是主要的弹幕模块系统
