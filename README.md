@@ -1,5 +1,5 @@
 
-# **建议参考新的弹幕系统：[chenqihui/QHDanmu2Demo](https://github.com/chenqihui/QHDanmu2Demo)**
+# **<font color=#FF8C00>建议参考新的弹幕系统：[chenqihui/QHDanmu2Demo](https://github.com/chenqihui/QHDanmu2Demo)</font>**
 
 # 说明：
 
